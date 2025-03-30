@@ -2,6 +2,7 @@
 
 A simple CLI application to fetch information such as title, genre, or ranking for any anime.
 
+
 ## 🚀 Installation & Usage
 
 </details>
@@ -55,6 +56,10 @@ git clone https://github.com/Moritz344/anime-info-cli.git
 cd anime-info-cli/src
 python3 main.py
 ```
+
+# Upcoming
+I plan to actively develop this project, so expect new features and improvements in the future.
+
 
 # Author
 - Moritz344
