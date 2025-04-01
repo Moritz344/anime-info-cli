@@ -3,7 +3,7 @@
 A simple CLI application to fetch information such as title, genre, or ranking for any anime.
 
 
-## 🚀 Installation & Usage
+## 🚀 Installation
 
 </details>
 <details>
