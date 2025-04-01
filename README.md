@@ -17,13 +17,6 @@ https://github.com/user-attachments/assets/4c241fd9-93d8-40f0-9696-188e0bc4cea2
 </details>
 
 
-### 🔧 Requirements
-- **Python 3** must be installed
-- **Git**
-- termcolor
-- rich
--requests
-
 ### Installation
 ```bash
 pip install anime-info-cli
