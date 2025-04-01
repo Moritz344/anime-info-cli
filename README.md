@@ -22,6 +22,7 @@ https://github.com/user-attachments/assets/4c241fd9-93d8-40f0-9696-188e0bc4cea2
 - **Git**
 - termcolor
 - rich
+-requests
 
 ### Easy Setup (Global Access)
 
