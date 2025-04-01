@@ -13,11 +13,9 @@ import sys
 import subprocess
 import time
 
-# TODO: clear screen
-
-# anime recommendation
 
 subprocess.run(["clear"])
+
     
 def anime_recommendation(anime_id):
 
@@ -47,6 +45,9 @@ def main():
         print()
         cprint("Goodbye!","red")
         sys.exit(0)
+    except Exception as e:
+        print("idk",e)
+
     base_url = "https://api.jikan.moe/v4"
     anime_info = requests.get(f"{base_url}/anime?q={anime_name}")
 
@@ -198,3 +199,10 @@ def check_status_code() -> None:
             print("No anime with this name or id found!",e)
 
 check_status_code()
+
+def cli_entry_point():
+    check_status_code()
+
+
+if __name__ == "__main__":
+    cli_entry_point()
