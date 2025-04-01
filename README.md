@@ -9,7 +9,8 @@ A simple CLI application to fetch information such as title, genre, or ranking f
 <details>
 <summary>Video</summary>
   
-https://github.com/user-attachments/assets/29f77e51-e719-4d79-bda5-5570e8995da2
+https://github.com/user-attachments/assets/4c241fd9-93d8-40f0-9696-188e0bc4cea2
+
 
 
 
