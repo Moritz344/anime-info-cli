@@ -10,9 +10,14 @@ from rich import box
 from rich.prompt import Prompt
 from termcolor import cprint,colored
 import sys
+import subprocess
 import time
 
+# TODO: clear screen
+
 # anime recommendation
+
+subprocess.run(["clear"])
     
 def anime_recommendation(anime_id):
 
@@ -25,12 +30,12 @@ def anime_recommendation(anime_id):
             rec = data["data"][0]["entry"]["title"]
             cprint(f"Recommendation of the day is: {rec} {anime_id}","magenta",attrs=["bold"])
         else:
-            print("Error loading anime recommendation.")
+            print("No anime recommendation for today.")
 
 try:
-    anime_recommendation(random.randint(0,10000))
+    anime_recommendation(random.randint(0,5000))
 except Exception as e:
-    print("Error loading anime recommendation.")
+    print("No anime recommendation for today.")
 
 def main():
     global anime_name,base_url,anime_info
@@ -47,7 +52,7 @@ def main():
 
     
 class App(object):
-    def __init__(self,title,desc,genres,figuren,anime_id,num_char,score,rank,Popularity,broadcast,base_url):
+    def __init__(self,title,desc,genres,figuren,anime_id,num_char,score,rank,Popularity,broadcast,base_url,status,episode):
         
         self.title = title
         self.desc = desc
@@ -61,12 +66,14 @@ class App(object):
         self.rank = rank
         self.popularity = Popularity
         self.broadcast = broadcast
+        self.episode = episode
+        self.status = status
         
         self.show_anime_data()
 
     def show_anime_data(self):
 
-        table = Table(title=f"{self.title} Table",box=box.SIMPLE_HEAD,highlight=True,title_style="bold white",show_lines=False,show_footer=False,row_styles=["#98971a","#d79921"],collapse_padding=True,header_style="bold #d79921",)
+        table = Table(title=f"{self.title} Table",box=box.ASCII,highlight=True,title_style="bold white",show_lines=False,show_footer=False,row_styles=["#98971a","#d79921"],collapse_padding=True,header_style="bold #d79921",)
 
         
 
@@ -75,7 +82,9 @@ class App(object):
                 "Genre": f"{self.genres}",
                 "Popularity": f"{self.popularity}",
                 "Rank": f"{self.rank}",
-                "Broadcast": f"{self.broadcast}"
+                "Episodes": f"{self.episode}",
+                "Broadcast": f"{self.broadcast}",
+                "Status": f"{self.status}",
         }
         
             
@@ -85,13 +94,15 @@ class App(object):
         table.add_column("Score",style="#b16286")
         table.add_column("Rank",style="#8ec07c")
         table.add_column("Popularity",style="#fabd2f")
+        table.add_column("Episodes",style="#b16286")
         table.add_column("Broadcast",style="#b16286")
+        table.add_column("Status",style="#b16286")
 
-        table.add_column("Description",style="green",justify="left")
         table.add_column("Characters",justify="left",style="cyan")
         
-        table.add_row(f"{self.title}",f"{self.genres} ",f"{self.score}",f"{self.rank}",f"{self.popularity}",f"{self.broadcast}",f"{self.desc}",f"{self.figuren}")
+        table.add_row(f"{self.title}",f"{self.genres} ",f"{self.score}",f"{self.rank}",f"{self.popularity}",f"{self.episode}",f"{self.broadcast}",f"{self.status}",f"{self.figuren}")
 
+        subprocess.run(["clear"])
         console = Console()
         console.print(table)
         
@@ -113,7 +124,7 @@ def anime_log(anime_id,full_data) -> None:
     with console.status("[bold green] Working on gathering data ...") as status:
         while tasks:
             task = tasks.pop(0)
-            time.sleep(0.5)
+            time.sleep(0.3)
             console.log(f"{task}")
         
 
@@ -144,7 +155,11 @@ def check_status_code() -> None:
                     rank = data["data"]["rank"]
                     popularity = data["data"]["popularity"]
                     broadcast = data["data"]["broadcast"]["day"]
+                    status = data["data"]["status"]
+                    episodes = data["data"]["episodes"]
                     genres = ""+",".join([genre['name'] for genre in data['data']['genres']])
+
+
 
 
 
@@ -169,11 +184,13 @@ def check_status_code() -> None:
                             f"rank: {rank}",
                             f"score: {score}",
                             f"broadcast: {broadcast}",
-                            f"popularity: {popularity}"
+                            f"popularity: {popularity}",
+                            f"status {status}",
+                            f"episodes {episodes}",
 
                     ]
                     anime_log(anime_id,full_data)
-                    App(title,desc,genres,figuren,anime_id,num_char,score,rank,popularity,broadcast,base_url)
+                    App(title,desc,genres,figuren,anime_id,num_char,score,rank,popularity,broadcast,base_url,status,episodes)
 
             else:
                 print("Error:",response.status_code)
