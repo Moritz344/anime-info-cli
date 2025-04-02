@@ -13,6 +13,9 @@ import sys
 import subprocess
 import time
 
+# TODO: english anime title
+# TODO: seasons?
+
 
 subprocess.run(["clear"])
 
@@ -20,7 +23,6 @@ subprocess.run(["clear"])
 def anime_recommendation(anime_id):
 
         # recommendation of the day!
-
         response = requests.get(f"https://api.jikan.moe/v4/anime/{anime_id}/recommendations")
 
         if response.status_code == 200:
@@ -28,14 +30,14 @@ def anime_recommendation(anime_id):
             rec = data["data"][0]["entry"]["title"]
             cprint(f"Recommendation of the day is: {rec} {anime_id}","magenta",attrs=["bold"])
         else:
-            print("No anime recommendation for today.")
+            cprint("No anime recommendation for today :/","magenta")
 
 try:
     anime_recommendation(random.randint(0,5000))
 except Exception as e:
-    print("No anime recommendation for today.")
+    cprint("No anime recommendation for today :/","magenta")
 
-def main():
+def main() -> str:
     global anime_name,base_url,anime_info
     print()
     # search with anime name
@@ -46,14 +48,16 @@ def main():
         cprint("Goodbye!","red")
         sys.exit(0)
     except Exception as e:
-        print("idk",e)
+        print(e)
 
     base_url = "https://api.jikan.moe/v4"
     anime_info = requests.get(f"{base_url}/anime?q={anime_name}")
 
+    return anime_name
+
     
 class App(object):
-    def __init__(self,title,desc,genres,figuren,anime_id,num_char,score,rank,Popularity,broadcast,base_url,status,episode):
+    def __init__(self,title,desc,genres,figuren,anime_id,num_char,score,rank,Popularity,broadcast,base_url,status,episode,title_english):
         
         self.title = title
         self.desc = desc
@@ -69,17 +73,18 @@ class App(object):
         self.broadcast = broadcast
         self.episode = episode
         self.status = status
+        self.title_english = title_english
         
         self.show_anime_data()
 
     def show_anime_data(self):
 
-        table = Table(title=f"{self.title} Table",box=box.ASCII,highlight=True,title_style="bold white",show_lines=False,show_footer=False,row_styles=["#98971a","#d79921"],collapse_padding=True,header_style="bold #d79921",)
+        table = Table(title=f"{self.title_english} Table",box=box.ASCII,highlight=True,title_style="bold white",show_lines=False,show_footer=False,row_styles=["#98971a","#d79921"],collapse_padding=True,header_style="bold #d79921",)
 
         
 
         anime_data = {
-                "Title": f"{self.title}",
+                "Title": f"{self.title_english}",
                 "Genre": f"{self.genres}",
                 "Popularity": f"{self.popularity}",
                 "Rank": f"{self.rank}",
@@ -101,7 +106,7 @@ class App(object):
 
         table.add_column("Characters",justify="left",style="cyan")
         
-        table.add_row(f"{self.title}",f"{self.genres} ",f"{self.score}",f"{self.rank}",f"{self.popularity}",f"{self.episode}",f"{self.broadcast}",f"{self.status}",f"{self.figuren}")
+        table.add_row(f"{self.title_english}",f"{self.genres} ",f"{self.score}",f"{self.rank}",f"{self.popularity}",f"{self.episode}",f"{self.broadcast}",f"{self.status}",f"{self.figuren}")
 
         subprocess.run(["clear"])
         console = Console()
@@ -133,7 +138,9 @@ def check_status_code() -> None:
 
     while True:
         try:
-            main()
+            anime_name = main()
+            if len(anime_name) < 2 :
+                raise Exception
             if anime_info.status_code == 200:
                 search_data = anime_info.json()
                 
@@ -158,6 +165,7 @@ def check_status_code() -> None:
                     broadcast = data["data"]["broadcast"]["day"]
                     status = data["data"]["status"]
                     episodes = data["data"]["episodes"]
+                    title_english = data["data"]["title_english"]
                     genres = ""+",".join([genre['name'] for genre in data['data']['genres']])
 
 
@@ -191,12 +199,12 @@ def check_status_code() -> None:
 
                     ]
                     anime_log(anime_id,full_data)
-                    App(title,desc,genres,figuren,anime_id,num_char,score,rank,popularity,broadcast,base_url,status,episodes)
+                    App(title,desc,genres,figuren,anime_id,num_char,score,rank,popularity,broadcast,base_url,status,episodes,title_english)
 
             else:
                 print("Error:",response.status_code)
         except Exception as e:
-            print("No anime with this name or id found!",e)
+            cprint("No anime with this name found :/","red")
 
 check_status_code()
 
