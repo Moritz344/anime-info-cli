@@ -7,17 +7,15 @@ from rich.columns import Columns
 from rich.table import Table
 from rich.panel import Panel
 from rich import box
+from anime_info.ascii_art import *
 from rich.prompt import Prompt
 from termcolor import cprint,colored
 import sys
-import subprocess
 import time
 
-# TODO: english anime title
-# TODO: seasons?
-
-
-subprocess.run(["clear"])
+console = Console()
+console.clear()
+cprint(ascii_1,"green",attrs=["bold","blink"])
 
     
 def anime_recommendation(anime_id):
@@ -108,8 +106,8 @@ class App(object):
         
         table.add_row(f"{self.title_english}",f"{self.genres} ",f"{self.score}",f"{self.rank}",f"{self.popularity}",f"{self.episode}",f"{self.broadcast}",f"{self.status}",f"{self.figuren}")
 
-        subprocess.run(["clear"])
         console = Console()
+        console.clear()
         console.print(table)
         
         console.log(anime_data,log_locals=False)
